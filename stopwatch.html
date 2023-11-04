@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <title>Stopwatch</title>
+
+    <style>
+      #title {
+        color: rgb(3, 2, 2);
+        background-color: #7f619b;
+        display: inline-block;
+        margin-top: 0px;
+      }
+      body {
+        background-color: black;
+      }
+      .mainbox {
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+        max-width: 800px;
+        border: 6px solid #b45d93;
+        height: 300px;
+        margin-left: 20vw;
+        margin-top: 20vh;
+        filter: drop-shadow(0 0 50px rgb(236, 136, 227));
+        animation: glow 2s alternate infinite;
+        justify-content: space-evenly;
+        align-content: center;
+        flex-wrap: wrap;
+        align-items: center;
+        background-color: #7f619b;
+      }
+      @keyframes glow {
+        0% {
+          filter: drop-shadow(0 0 10px rgb(236, 136, 227));
+        }
+        100% {
+          filter: drop-shadow(0 0 30px rgb(236, 136, 227));
+        }
+      }
+      .timer h1 {
+        font-size: xxx-large;
+        color: #a21d34;
+      }
+      .start button:hover {
+        cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play"><polygon points="5 3 19 12 5 21 5 3"/></svg>'),
+          auto;
+      }
+      .stop button:hover {
+        cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pause"><rect width="4" height="16" x="6" y="4"/><rect width="4" height="16" x="14" y="4"/></svg>'),
+          auto;
+      }
+      .rese button:hover {
+        cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-ccw"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>'),
+          auto;
+      }
+      .mainbox:hover {
+        cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-timer"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/></svg>'),
+          auto;
+      }
+
+      .buttons {
+        display: flex;
+        flex-direction: row;
+      }
+      #timewatch {
+        filter: drop-shadow(0 0 20px white);
+        animation: glow 0.8s alternate infinite;
+      }
+      #title{
+        box-shadow: 10px 7px 18px 6px #7f619b;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="title">ONLINE STOPWATCH</h1>
+    <div class="mainbox">
+      <div class="timer">
+        <h1 id="timewatch">00:00:00</h1>
+      </div>
+      <div class="buttons">
+        <div class="start">
+          <button
+            type="button"
+            class="btn btn-outline-danger btn-lg"
+            style="margin: 4px"
+            onclick="start()"
+          >
+            Start
+          </button>
+        </div>
+        <div class="stop">
+          <button
+            type="button"
+            class="btn btn-outline-danger btn-lg"
+            style="margin: 4px"
+            onclick="stop()"
+          >
+            Stop
+          </button>
+        </div>
+        <div class="rese">
+          <button
+            type="button"
+            class="btn btn-outline-danger btn-lg"
+            style="margin: 4px"
+            onclick="reset()"
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      let smallersecond = 0;
+      let seconds = 0;
+      let minute = 0;
+      let time = document.getElementById("timewatch");
+      let prev = null;
+      function timer() {
+        seconds++;
+        if (seconds == 60) {
+          seconds = 0;
+          smallersecond++;
+        }
+        if (smallersecond == 60) {
+          smallersecond = 0;
+          minute++;
+        }
+        let h, m, s;
+        if (minute < 10) {
+          h = "0" + minute;
+        } else {
+          h = minute;
+        }
+        if (smallersecond < 10) {
+          m = "0" + smallersecond;
+        } else {
+          m = smallersecond;
+        }
+        if (seconds < 10) {
+          s = "0" + seconds;
+        } else {
+          s = seconds;
+        }
+        time.innerHTML = h + ":" + m + ":" + s;
+      }
+      function start() {
+        if (prev != null) {
+          clearInterval(prev);
+        }
+        prev = setInterval(timer, 100);
+      }
+      function stop() {
+        clearInterval(prev);
+      }
+      function reset() {
+        clearInterval(prev);
+        minute = 0;
+        smallersecond = 0;
+        seconds = 0;
+        time.innerHTML = "00:00:00";
+      }
+    </script>
+  </body>
+</html>
